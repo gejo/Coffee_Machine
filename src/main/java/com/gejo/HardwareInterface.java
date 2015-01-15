@@ -6,5 +6,7 @@ package com.gejo;
 public interface HardwareInterface {
     String getPotStatus();
 
+    void turnOnBoiler();
+
     int getWaterLevel();
 }

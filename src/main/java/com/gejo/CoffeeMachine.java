@@ -5,7 +5,7 @@ package com.gejo;
  */
 public class CoffeeMachine {
     public static final String STATUS_BREWING = "BREWING";
-    public static final String POT_STATUS_AVAILABLE = "POT_AVAILABLE";
+    public static final String POT_STATUS_EMPTY = "POT_AVAILABLE";
     private HardwareInterface hardwareInterface;
     private String status;
 
@@ -18,6 +18,7 @@ public class CoffeeMachine {
     }
 
     public void startBrew() {
+        this.hardwareInterface.turnOnBoiler();
         setStatus(STATUS_BREWING);
     }
 
