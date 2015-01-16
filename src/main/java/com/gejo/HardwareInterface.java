@@ -9,4 +9,6 @@ public interface HardwareInterface {
     void turnOnBoiler();
 
     int getWaterLevel();
+
+    String getBrewButtonStatus();
 }
