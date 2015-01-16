@@ -11,9 +11,10 @@ public class CoffeeMachine {
     public static final String STATUS_BREWING = "BREWING";
     public static final String POT_STATUS_EMPTY = "POT_EMPTY";
     public static final String BREW_BUTTON_PUSHED = "PUSHED";
+    public static final String BREW_BUTTON_NOT_PUSHED = "PUSHED";
     public static final String STATUS_STOPPED = "STOPPED";
     private HardwareInterface hardwareInterface;
-    private volatile String status = STATUS_STOPPED;
+    private String status = STATUS_STOPPED;
     private ScheduledExecutorService scheduledExecutorService;
 
     public HardwareInterface getHardware() {
@@ -37,8 +38,8 @@ public class CoffeeMachine {
     }
 
     public void start() {
-        scheduledExecutorService = Executors.newScheduledThreadPool(2);
-        scheduledExecutorService.scheduleAtFixedRate(getCheckBrewButtonTask(), 0, 1, TimeUnit.MILLISECONDS);
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(getCheckBrewButtonTask(), 0, 10, TimeUnit.MILLISECONDS);
     }
 
     public void startBrew() {
@@ -59,5 +60,9 @@ public class CoffeeMachine {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void stop() {
+        scheduledExecutorService.shutdown();
     }
 }
