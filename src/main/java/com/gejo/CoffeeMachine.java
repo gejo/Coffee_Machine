@@ -9,10 +9,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class CoffeeMachine {
     public static final String STATUS_BREWING = "BREWING";
-    public static final String POT_STATUS_EMPTY = "POT_EMPTY";
+    public static final String POT_EMPTY = "POT_EMPTY";
     public static final String BREW_BUTTON_PUSHED = "PUSHED";
     public static final String BREW_BUTTON_NOT_PUSHED = "PUSHED";
     public static final String STATUS_STOPPED = "STOPPED";
+    public static final String POT_NOT_PRESENT = "POT_NOT_PRESENT";
     private HardwareInterface hardwareInterface;
     private String status = STATUS_STOPPED;
     private ScheduledExecutorService scheduledExecutorService;
@@ -47,6 +48,12 @@ public class CoffeeMachine {
             return;
         }
         hardwareInterface.turnOnBoiler();
+
+        if (POT_EMPTY.equals(hardwareInterface.getPotStatus())) {
+            hardwareInterface.closeVelvo();
+        }else {
+            hardwareInterface.openVelvo();
+        }
         setStatus(STATUS_BREWING);
     }
 

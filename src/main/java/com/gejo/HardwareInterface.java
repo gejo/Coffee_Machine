@@ -11,4 +11,8 @@ public interface HardwareInterface {
     int getWaterLevel();
 
     String getBrewButtonStatus();
+
+    void closeVelvo();
+
+    void openVelvo();
 }

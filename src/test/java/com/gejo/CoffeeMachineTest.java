@@ -1,6 +1,5 @@
 package com.gejo;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,28 +19,47 @@ public class CoffeeMachineTest {
         createCoffeeMachine();
     }
 
-    @After
-    public void tearDown() {
-        coffeeMachine.stop();
-    }
-
     @Test
     public void should_not_brew_without_water() {
+        setWaterLevel(0);
+        coffeeMachine.startBrew();
+
         assertEquals(CoffeeMachine.STATUS_STOPPED, coffeeMachine.getStatus());
     }
 
     @Test
     public void should_brew_coffee_with_water() throws Exception {
-
         setWaterLevel(20);
-        pushBrewButton();
+        coffeeMachine.startBrew();
 
         assertEquals(CoffeeMachine.STATUS_BREWING, coffeeMachine.getStatus());
         Mockito.verify(hardware, Mockito.times(1)).turnOnBoiler();
     }
 
-    private void pushBrewButton() throws Exception {
-        Thread.currentThread().sleep(200);
+    @Test
+    public void should_deliver_water() {
+        setWaterLevel(20);
+        putCoffeePot();
+
+        coffeeMachine.startBrew();
+        Mockito.verify(hardware, Mockito.times(1)).closeVelvo();
+    }
+
+    @Test
+    public void should_not_deliver_water() {
+        setWaterLevel(20);
+        removeCoffeePot();
+
+        coffeeMachine.startBrew();
+        Mockito.verify(hardware, Mockito.times(1)).openVelvo();
+    }
+
+    private void removeCoffeePot() {
+        Mockito.when(hardware.getPotStatus()).thenReturn(CoffeeMachine.POT_NOT_PRESENT);
+    }
+
+    private void putCoffeePot() {
+        Mockito.when(hardware.getPotStatus()).thenReturn(CoffeeMachine.POT_EMPTY);
     }
 
     private void createCoffeeMachine() {
@@ -49,7 +67,6 @@ public class CoffeeMachineTest {
         setWaterLevel(0);
         Mockito.when(hardware.getBrewButtonStatus()).thenReturn(CoffeeMachine.BREW_BUTTON_PUSHED);
         coffeeMachine = new CoffeeMachine(hardware);
-        coffeeMachine.start();
     }
 
     private void setWaterLevel(int waterLevel) {
