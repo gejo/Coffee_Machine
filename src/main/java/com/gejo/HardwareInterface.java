@@ -15,4 +15,8 @@ public interface HardwareInterface {
     void closeVelvo();
 
     void openVelvo();
+
+    void closeWarmer();
+
+    void turnOnWarmer();
 }

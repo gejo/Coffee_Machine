@@ -39,7 +39,7 @@ public class CoffeeMachineTest {
     @Test
     public void should_deliver_water() {
         setWaterLevel(20);
-        putCoffeePot();
+        putEmptyCoffeePot();
 
         coffeeMachine.startBrew();
         Mockito.verify(hardware, Mockito.times(1)).closeVelvo();
@@ -54,11 +54,31 @@ public class CoffeeMachineTest {
         Mockito.verify(hardware, Mockito.times(1)).openVelvo();
     }
 
+    @Test
+    public void should_not_warm_coffee() {
+        putEmptyCoffeePot();
+        coffeeMachine.warmCoffee();
+
+        Mockito.verify(hardware, Mockito.times(1)).closeWarmer();
+    }
+
+    @Test
+    public void should_warm_coffee() {
+        putNotEmptyCoffeePot();
+        coffeeMachine.warmCoffee();
+
+        Mockito.verify(hardware, Mockito.times(1)).turnOnWarmer();
+    }
+
+    private void putNotEmptyCoffeePot() {
+        Mockito.when(hardware.getPotStatus()).thenReturn(CoffeeMachine.POT_NOT_EMPTY);
+    }
+
     private void removeCoffeePot() {
         Mockito.when(hardware.getPotStatus()).thenReturn(CoffeeMachine.POT_NOT_PRESENT);
     }
 
-    private void putCoffeePot() {
+    private void putEmptyCoffeePot() {
         Mockito.when(hardware.getPotStatus()).thenReturn(CoffeeMachine.POT_EMPTY);
     }
 

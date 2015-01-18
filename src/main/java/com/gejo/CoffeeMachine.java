@@ -14,6 +14,7 @@ public class CoffeeMachine {
     public static final String BREW_BUTTON_NOT_PUSHED = "PUSHED";
     public static final String STATUS_STOPPED = "STOPPED";
     public static final String POT_NOT_PRESENT = "POT_NOT_PRESENT";
+    public static final String POT_NOT_EMPTY = "PORT_NOT_EMPTY";
     private HardwareInterface hardwareInterface;
     private String status = STATUS_STOPPED;
     private ScheduledExecutorService scheduledExecutorService;
@@ -71,5 +72,13 @@ public class CoffeeMachine {
 
     public void stop() {
         scheduledExecutorService.shutdown();
+    }
+
+    public void warmCoffee() {
+        if (hardwareInterface.getPotStatus().equals(POT_EMPTY)) {
+            hardwareInterface.closeWarmer();
+        }else {
+            hardwareInterface.turnOnWarmer();
+        }
     }
 }
